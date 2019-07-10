@@ -15,7 +15,13 @@ class AttrDict(dict):
 
         self[name] = value
 
-    __getattr__ = dict.__getitem__
+    def __getattr__(self, name):
+        if name in self:
+            return self[name]
+
+        raise AttributeError(
+            "type object 'AttrDict' has no attribute '{}'".format(name)
+        )
 
     def __getstate__(self):
         return self.__dict__.copy()
