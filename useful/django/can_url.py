@@ -1,13 +1,16 @@
-from django.core import urlresolvers
 from django.core.exceptions import PermissionDenied
-from django.utils.functional import memoize
+from django.utils import lru_cache
+
+try:
+    from django.core import urlresolvers
+except ImportError:
+    from django import urls as urlresolvers
 
 # This module requires that you use useful.django.urlpatterns.UrlPatterns
 # to decorate your views.
 
-_all_callbacks = {}     # caches the callbacks dicts per URLconf
 
-
+@lru_cache.lru_cache(maxsize=None)
 def get_all_callbacks(urlconf):
     """
     Gets the dict translating the view names to view callables for the entire
@@ -38,7 +41,6 @@ def get_all_callbacks(urlconf):
 
     add_callbacks(urlresolvers.get_resolver(urlconf), '')
     return callbacks
-get_all_callbacks = memoize(get_all_callbacks, _all_callbacks, 1)
 
 
 def can_url(user, view):

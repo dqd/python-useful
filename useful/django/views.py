@@ -6,9 +6,13 @@ import django
 from django import shortcuts
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.core.urlresolvers import reverse
 from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import RequestContext
+
+try:
+    from django.core.urlresolvers import reverse
+except ImportError:
+    from django.urls import reverse
 
 from .crypto import SecretTokenGenerator
 
